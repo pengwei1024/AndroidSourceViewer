@@ -13,6 +13,6 @@ public interface Constant {
             "JellyBean - 4.2.2", "JellyBean - 4.2", "Froyo - 2.2.3", "Eclair - 2.1",
             "Donut - 1.6"};
 
+//    String DOWNLOAD_BASE_PATH = "http://androidxref.com/%s/xref/frameworks/base/core/java/%s";
     String DOWNLOAD_BASE_PATH = "http://androidxref.com/%s/raw/frameworks/base/core/java/%s";
-
 }

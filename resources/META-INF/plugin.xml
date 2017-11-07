@@ -1,39 +1,54 @@
 <idea-plugin version="2">
-  <id>com.apkfuns.androidsourceviewer</id>
-  <name>AndroidSourceViewer</name>
-  <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <id>com.apkfuns.androidsourceviewer</id>
+    <name>AndroidSourceViewer</name>
+    <version>1.0</version>
+    <vendor email="pengwei1024@gmail.com" url="http://www.apkfuns.com">pengwei</vendor>
 
-  <description><![CDATA[
+    <description><![CDATA[
       Enter short description for your plugin here.<br>
       <em>most HTML tags may be used</em>
     ]]></description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
       Add change notes here.<br>
       <em>most HTML tags may be used</em>
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="141.0"/>
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="141.0"/>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
 
-  <actions>
-    <!-- Add your actions here -->
-    <action id="SourceViewerAction" class="com.apkfuns.androidsourceviewer.SourceViewerAction" text="AndroidSourceViewer"
-            description="SourceViewerAction">
-      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-    </action>
-  </actions>
+    <actions>
+        <group>
+            <separator/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </group>
+        <action id="SourceViewerAction" class="com.apkfuns.androidsourceviewer.action.SourceViewerAction"
+            text="View Android Source" icon="/icons/java.png"
+            description="View Android Source Code">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 1"/>
+        </action>
+        <action id="DiffSourceAction" class="com.apkfuns.androidsourceviewer.action.DiffSourceAction"
+                text="Diff Android Source" icon="/icons/diff.png"
+                description="Diff Android Source Code">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 2"/>
+        </action>
+        <group>
+            <separator/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </group>
+    </actions>
 
 </idea-plugin>

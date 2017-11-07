@@ -1,5 +1,6 @@
-package com.apkfuns.androidsourceviewer;
+package com.apkfuns.androidsourceviewer.util;
 
+import com.apkfuns.androidsourceviewer.entity.DownloadResult;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
@@ -27,7 +28,7 @@ public class Utils {
      * @param outputFolder
      * @param result
      */
-    public static void download(String[] fileUrl, File outputFolder, DownloadResult result) {
+    public static void downloadFile(String[] fileUrl, File outputFolder, DownloadResult<File> result) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {

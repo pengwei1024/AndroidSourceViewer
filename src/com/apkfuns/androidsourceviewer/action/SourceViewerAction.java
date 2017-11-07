@@ -1,4 +1,4 @@
-package com.apkfuns.androidsourceviewer;
+package com.apkfuns.androidsourceviewer.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -34,6 +34,5 @@ public class SourceViewerAction extends AnAction {
         if (packageName != null) {
             new VersionSelectAction(packageName).actionPerformed(event);
         }
-//        Utils.openFileInPanel("/Users/baidu/Downloads/TextUtils的副本.java", event.getProject());
     }
 }
