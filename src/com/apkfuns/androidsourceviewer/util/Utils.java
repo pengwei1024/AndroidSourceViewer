@@ -16,6 +16,8 @@ import com.intellij.platform.templates.github.DownloadUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiVariable;
+import com.intellij.psi.impl.source.PsiFieldImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 /**
  * Created by pengwei on 2017/11/5.
@@ -50,6 +51,10 @@ public class Utils {
             System.out.println("method => " + method.getName() + " # "
                     + method.getContainingClass().getQualifiedName());
             packageName = method.getContainingClass().getQualifiedName();
+        } else if (element instanceof PsiVariable) {
+            PsiVariable psiVariable = (PsiVariable) element;
+            packageName = psiVariable.getType().getCanonicalText();
+            System.out.println("PsiVariable:" + psiVariable.getType().getCanonicalText());
         } else {
             System.out.println("cls = " + element.getClass());
         }
@@ -59,19 +64,27 @@ public class Utils {
     /**
      * 下载文件
      *
-     * @param fileUrl
-     * @param outputFolder
-     * @param result
+     * @param fileUrl 下载链接
+     * @param outputFolder 保存文件夹
+     * @param fileNames 保存文件名
+     * @param result 下载回调
      */
-    public static void downloadFile(String[] fileUrl, File outputFolder, DownloadResult<File> result) {
+    public static void downloadFile(String[] fileUrl, @NotNull File outputFolder, @Nullable String[] fileNames,
+                                    DownloadResult<File> result) {
         try {
             if (fileUrl != null) {
                 List<File> fileList = new ArrayList<File>();
-                for (String url : fileUrl) {
+                for (int i = 0; i < fileUrl.length; i++) {
+                    String url = fileUrl[i];
                     if (url == null) {
                         continue;
                     }
-                    String filename = url.substring(url.lastIndexOf("/") + 1);
+                    String filename;
+                    if (fileNames == null || isEmpty(fileNames[i])) {
+                        filename = url.substring(url.lastIndexOf("/") + 1);
+                    } else {
+                        filename = fileNames[i];
+                    }
                     File outFile = new File(outputFolder, filename);
                     if (outFile.exists()) {
                         fileList.add(outFile);
@@ -105,11 +118,6 @@ public class Utils {
             public void run() {
                 VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
                 if (file != null && file.isValid()) {
-                    try {
-                        file.setWritable(false);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     FileEditorProvider[] providers = FileEditorProviderManager.getInstance()
                             .getProviders(project, file);
                     if (providers.length != 0) {
@@ -144,6 +152,7 @@ public class Utils {
 
     /**
      * 下载链接
+     *
      * @param packageName
      * @param classPath
      * @param version
@@ -161,5 +170,29 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    /**
+     * 打开文件夹
+     */
+    public static void openDirectory(String directory) {
+        File file = new File(directory);
+        if (!file.exists() || !file.isDirectory()) {
+            return;
+        }
+        try {
+            java.awt.Desktop.getDesktop().open(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 创建可点击的链接
+     * @param path
+     * @return
+     */
+    public static String createClickableUrl(String path) {
+        return "<a href=\"file://open?path=" + path + "\">打开文件夹</a>";
     }
 }

@@ -24,7 +24,8 @@ public interface Constant {
             "org.xml", "org.w3c", "org.relaxng", "org.omg", "org.jcp", "org.ietf", "jdk.internal"};
 
     String[] ANDROID_PACKAGE_PREFIX = {"android", "org.chromium", "frameworks", "com.android",
-            "com.google", "com.googlecode", "com.example.android"};
+            "com.google", "com.googlecode", "com.example.android", "org.json", "org.xml", "org.xmlpull",
+            "org.w3c", "org.apache", "dalvik", "junit.framework", "junit.runner"};
 
     // Android 下载链接
     String DOWNLOAD_BASE_PATH = "http://androidxref.com/%s/raw/frameworks/base/core/java/%s";

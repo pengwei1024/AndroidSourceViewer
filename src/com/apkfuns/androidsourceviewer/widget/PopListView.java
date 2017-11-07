@@ -1,5 +1,6 @@
 package com.apkfuns.androidsourceviewer.widget;
 
+import com.apkfuns.androidsourceviewer.util.Utils;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -31,7 +32,9 @@ public class PopListView {
         DefaultActionGroup group = new DefaultActionGroup();
         if (data != null && data.length > 0) {
             for (int i = 0; i < data.length; i++) {
-                group.add(new ListItemAction(i, data[i], listener));
+                if (!Utils.isEmpty(data[i])) {
+                    group.add(new ListItemAction(i, data[i], listener));
+                }
             }
         }
         listPopup = JBPopupFactory.getInstance().createActionGroupPopup(title, group,
