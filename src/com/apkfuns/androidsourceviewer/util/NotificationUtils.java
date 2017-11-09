@@ -6,6 +6,7 @@ import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.net.URL;
@@ -20,7 +21,8 @@ public class NotificationUtils {
      * @param message
      * @param type
      */
-    public static void showNotification(final String message, final NotificationType type) {
+    public static void showNotification(final String message, final NotificationType type,
+                                        @Nullable final NotificationUrlClickListener listener) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -31,6 +33,10 @@ public class NotificationUtils {
                                     public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent hyperlinkEvent) {
                                         URL url = hyperlinkEvent.getURL();
                                         if (url == null) {
+                                            return;
+                                        }
+                                        if (listener != null) {
+                                            listener.onUrlClick(url);
                                             return;
                                         }
                                         if ("file".equals(url.getProtocol())) {
@@ -54,16 +60,7 @@ public class NotificationUtils {
      * @param message
      */
     public static void errorNotification(final String message) {
-        showNotification(message, NotificationType.ERROR);
-    }
-
-    /**
-     * error message dialog
-     *
-     * @param message
-     */
-    public static void errorMsgDialog(String message) {
-        Messages.showMessageDialog(message, "Error", Messages.getInformationIcon());
+        showNotification(message, NotificationType.ERROR, null);
     }
 
     /**
@@ -72,7 +69,11 @@ public class NotificationUtils {
      * @param message
      */
     public static void infoNotification(final String message) {
-        showNotification(message, NotificationType.INFORMATION);
+        showNotification(message, NotificationType.INFORMATION, null);
+    }
+
+    public static void infoNotification(String message, NotificationUrlClickListener clickListener) {
+        showNotification(message, NotificationType.INFORMATION, clickListener);
     }
 
     /**
@@ -87,6 +88,19 @@ public class NotificationUtils {
                 Messages.showMessageDialog(message, "Error", Messages.getInformationIcon());
             }
         });
+    }
+
+    /**
+     * error message dialog
+     *
+     * @param message
+     */
+    public static void errorMsgDialog(String message) {
+        Messages.showMessageDialog(message, "Error", Messages.getInformationIcon());
+    }
+
+    public interface NotificationUrlClickListener {
+        void onUrlClick(URL url);
     }
 
 }
