@@ -1,7 +1,7 @@
 package com.apkfuns.androidsourceviewer.util;
 
 import android.text.TextUtils;
-import com.apkfuns.androidsourceviewer.Constant;
+import com.apkfuns.androidsourceviewer.entity.Constant;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;

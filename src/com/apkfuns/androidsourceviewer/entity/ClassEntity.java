@@ -14,6 +14,8 @@ public class ClassEntity {
     // 文件名上一级包名 => java.util
     private String parentPackage;
     private String versionName;
+    // 下载链接
+    private String downloadUrl;
 
     public ClassEntity(String packageName, String versionName) {
         this.packageName = packageName;
@@ -53,10 +55,30 @@ public class ClassEntity {
     }
 
     public String getDownloadUrl() {
+        if (!Utils.isEmpty(downloadUrl)) {
+            return downloadUrl;
+        }
         return Utils.getDownloadUrl(packageName, getLocalPath(), versionName);
     }
 
-    public String getSavePath() {
+    public String getSaveName() {
         return getVersionName() + "-" + getFileName();
+    }
+
+    /**
+     * 是否为 Android 的类
+     * @return
+     */
+    public boolean isAndroidClass() {
+        for (String prefix : Constant.ANDROID_PACKAGE_PREFIX) {
+            if (packageName.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 }

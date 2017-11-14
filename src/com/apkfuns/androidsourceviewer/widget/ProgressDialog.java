@@ -1,6 +1,6 @@
 package com.apkfuns.androidsourceviewer.widget;
 
-import com.apkfuns.androidsourceviewer.Constant;
+import com.apkfuns.androidsourceviewer.entity.Constant;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -20,10 +20,8 @@ public class ProgressDialog extends DialogWrapper {
     public ProgressDialog(@Nullable Project project, String title) {
         super(project);
         this.title = title;
-//        this.myCancelAction = null;
         this.myHelpAction = null;
         this.init();
-//        setOKButtonText("Cancel");
         setResizable(false);
         setTitle(Constant.TITLE);
     }

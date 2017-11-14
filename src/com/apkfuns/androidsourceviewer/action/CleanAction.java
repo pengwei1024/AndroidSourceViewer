@@ -12,6 +12,10 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * 清理缓存的Java文件
+ * Tools > Android Source Viewer > Clean Cache
+ */
 public class CleanAction extends AnAction {
 
     private File cacheFile;

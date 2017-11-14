@@ -1,6 +1,7 @@
 package com.apkfuns.androidsourceviewer.util;
 
-import com.apkfuns.androidsourceviewer.Constant;
+import com.apkfuns.androidsourceviewer.entity.Constant;
+import com.apkfuns.androidsourceviewer.entity.ClassEntity;
 import com.apkfuns.androidsourceviewer.entity.DownloadResult;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -10,6 +11,7 @@ import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.templates.github.DownloadUtil;
@@ -17,14 +19,18 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiVariable;
-import com.intellij.psi.impl.source.PsiFieldImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by pengwei on 2017/11/5.
@@ -44,19 +50,29 @@ public class Utils {
         }
         if (element instanceof PsiClass) {
             PsiClass cls = (PsiClass) element;
-            System.out.println("class => " + cls.getQualifiedName());
-            packageName = cls.getQualifiedName();
+            if (cls.getContainingClass() != null) {
+                // 排除内部类的情况
+                packageName = cls.getContainingClass().getQualifiedName();
+            } else {
+                packageName = cls.getQualifiedName();
+            }
+            System.out.println("class => " + packageName);
         } else if (element instanceof PsiMethod) {
             PsiMethod method = (PsiMethod) element;
-            System.out.println("method => " + method.getName() + " # "
+            Log.debug("method => " + method.getName() + " # "
                     + method.getContainingClass().getQualifiedName());
             packageName = method.getContainingClass().getQualifiedName();
         } else if (element instanceof PsiVariable) {
             PsiVariable psiVariable = (PsiVariable) element;
             packageName = psiVariable.getType().getCanonicalText();
-            System.out.println("PsiVariable:" + psiVariable.getType().getCanonicalText());
+            // 去除泛型
+            if (!Utils.isEmpty(packageName)) {
+                packageName = packageName.replaceAll("<.*>", "");
+            }
+            // FIXME: 2017/11/11 变量对应类是内部类会有问题
+            Log.debug("PsiVariable:" + psiVariable.getType().getCanonicalText());
         } else {
-            System.out.println("cls = " + element.getClass());
+            Log.debug("cls = " + element.getClass());
         }
         return packageName;
     }
@@ -64,42 +80,52 @@ public class Utils {
     /**
      * 下载文件
      *
-     * @param fileUrl 下载链接
-     * @param outputFolder 保存文件夹
-     * @param fileNames 保存文件名
-     * @param result 下载回调
+     * @param classEntities 需要下载的类
+     * @param outputFolder  保存文件夹
+     * @param result        下载回调
+     * @param needRetry     失败是否需要重试
      */
-    public static void downloadFile(String[] fileUrl, @NotNull File outputFolder, @Nullable String[] fileNames,
-                                    DownloadResult<File> result) {
+    public static void downloadFile(@NotNull ClassEntity[] classEntities, @NotNull File outputFolder,
+                                    DownloadResult<File> result, boolean needRetry) {
         try {
-            if (fileUrl != null) {
-                List<File> fileList = new ArrayList<File>();
-                for (int i = 0; i < fileUrl.length; i++) {
-                    String url = fileUrl[i];
-                    if (url == null) {
-                        continue;
-                    }
-                    String filename;
-                    if (fileNames == null || isEmpty(fileNames[i])) {
-                        filename = url.substring(url.lastIndexOf("/") + 1);
-                    } else {
-                        filename = fileNames[i];
-                    }
-                    File outFile = new File(outputFolder, filename);
-                    if (outFile.exists()) {
-                        fileList.add(outFile);
-                        continue;
-                    }
-                    DownloadUtil.downloadAtomically(null, url, outFile);
-                    if (outFile.exists()) {
-                        fileList.add(outFile);
-                    }
+            List<File> fileList = new ArrayList<File>();
+            for (int i = 0; i < classEntities.length; i++) {
+                String url = classEntities[i].getDownloadUrl();
+                if (url == null) {
+                    continue;
                 }
-                if (result != null) {
-                    result.onSuccess(fileList);
+                String filename;
+                if (isEmpty(classEntities[i].getSaveName())) {
+                    filename = url.substring(url.lastIndexOf("/") + 1);
+                } else {
+                    filename = classEntities[i].getSaveName();
+                }
+                File outFile = new File(outputFolder, filename);
+                if (outFile.exists()) {
+                    fileList.add(outFile);
+                    continue;
+                }
+                DownloadUtil.downloadAtomically(null, url, outFile);
+                if (outFile.exists()) {
+                    fileList.add(outFile);
                 }
             }
+            if (result != null) {
+                result.onSuccess(fileList);
+            }
         } catch (IOException e) {
+            // Android 重试一次
+            if (needRetry) {
+                String newUrl = androidOnlineSearch(classEntities[0]);
+                Log.debug( "重试Url:" + newUrl + "  错误原因:" + e.getMessage());
+                if (!isEmpty(newUrl)) {
+                    for (ClassEntity entity : classEntities) {
+                        entity.setDownloadUrl(newUrl);
+                    }
+                    downloadFile(classEntities, outputFolder, result, false);
+                    return;
+                }
+            }
             if (result != null) {
                 result.onFailure(e.getMessage(), e);
             }
@@ -189,10 +215,53 @@ public class Utils {
 
     /**
      * 创建可点击的链接
+     *
      * @param path
      * @return
      */
     public static String createClickableUrl(String path) {
         return "<a href=\"file://open?path=" + path + "\">打开文件夹</a>";
+    }
+
+    /**
+     * Get 请求
+     *
+     * @param uri
+     * @return
+     * @throws Exception
+     */
+    public static String syncGet(String uri) throws Exception {
+        URL url = new URL(uri);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(5 * 1000);
+        conn.setRequestMethod("GET");
+        InputStream inStream = conn.getInputStream();
+        String result = new String(StreamUtil.loadFromStream(inStream));
+        return result;
+    }
+
+    /**
+     * Android 在线搜索源码
+     * 解决像 JsonObject 和其他 Android 源码不在一个目录下
+     * @param classEntity
+     * @return 源码下载地址
+     */
+    public static String androidOnlineSearch(final ClassEntity classEntity) {
+        try {
+            String requestPath = classEntity.getPackageName().replaceAll("\\.", "%2F");
+            String url = String.format(Constant.ANDROID_SEARCH, classEntity.getVersionName(), requestPath);
+            System.out.println("url=" + url);
+            String result = Utils.syncGet(url);
+            result = result.replace("\n", "");
+            Pattern pattern = Pattern.compile("id=\"results\".*class=\"f\"><a href=\"(.*?)\">");
+            Matcher matcher = pattern.matcher(result);
+            if (matcher.find()) {
+                String res = "http://androidxref.com" + matcher.group(1);
+                return res.replace("/xref/", "/raw/");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

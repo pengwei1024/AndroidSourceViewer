@@ -24,6 +24,7 @@ public class PopListView {
 
     /**
      * create ListPop
+     *
      * @param title
      * @param data
      * @param listener
@@ -33,7 +34,11 @@ public class PopListView {
         if (data != null && data.length > 0) {
             for (int i = 0; i < data.length; i++) {
                 if (!Utils.isEmpty(data[i])) {
-                    group.add(new ListItemAction(i, data[i], listener));
+                    if (data[i].contains("-")) {
+                        group.add(new ListItemAction(i, data[i], listener));
+                    } else {
+                        group.addSeparator(data[i]);
+                    }
                 }
             }
         }

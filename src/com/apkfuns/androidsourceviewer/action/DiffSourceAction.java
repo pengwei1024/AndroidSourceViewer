@@ -1,8 +1,10 @@
 package com.apkfuns.androidsourceviewer.action;
 
-import com.apkfuns.androidsourceviewer.Constant;
+import com.apkfuns.androidsourceviewer.entity.Constant;
 import com.apkfuns.androidsourceviewer.entity.ClassEntity;
 import com.apkfuns.androidsourceviewer.entity.DownloadResult;
+import com.apkfuns.androidsourceviewer.util.Log;
+import com.apkfuns.androidsourceviewer.util.NotificationUtils;
 import com.apkfuns.androidsourceviewer.util.Utils;
 import com.apkfuns.androidsourceviewer.widget.PopListView;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -25,6 +27,7 @@ import java.util.List;
 
 /**
  * Created by pengwei on 2017/11/6.
+ * 对比两个类差异
  */
 public class DiffSourceAction extends BaseSourceAction implements PopListView.OnItemClickListener {
 
@@ -35,13 +38,13 @@ public class DiffSourceAction extends BaseSourceAction implements PopListView.On
     protected void onClassSelected(AnActionEvent event, String packageName) {
         firstValue = null;
         popListView = new PopListView(event);
-        popListView.createList("选择一个版本", data, this);
+        popListView.createList("Choose a version", data, this);
     }
 
     @Override
     public void OnItemClick(int position, final String value) {
         if (firstValue == null) {
-            System.out.println("first =>" + value);
+            Log.debug("first =>" + value);
             firstValue = value;
             String[] newArray = data.clone();
             for (int i = 0; i < newArray.length; i++) {
@@ -50,21 +53,24 @@ public class DiffSourceAction extends BaseSourceAction implements PopListView.On
                     break;
                 }
             }
-            popListView.createList("选择另一个版本", newArray, this);
+            popListView.createList("Choose another version", newArray, this);
         } else {
             System.out.println("second =>" + value);
-            String title = "正在下载：" + packageName;
+            String title = "Download：" + packageName;
             ProgressManager.getInstance().run(new Task.Backgroundable(project, title) {
                 @Override
                 public void run(@NotNull ProgressIndicator progressIndicator) {
-                    ClassEntity entity1 = new ClassEntity(packageName, firstValue);
+                    final ClassEntity entity1 = new ClassEntity(packageName, firstValue);
                     ClassEntity entity2 = new ClassEntity(packageName, value);
-                    Utils.downloadFile(new String[]{entity1.getDownloadUrl(), entity2.getDownloadUrl()},
-                            new File("/Users/baidu/Desktop/AndroidSourceViewer/" + entity1.getParentPath()),
-                            new String[]{entity1.getSavePath(), entity2.getSavePath()}, new DownloadResult<File>() {
+                    Utils.downloadFile(new ClassEntity[]{entity1, entity2},
+                            new File(Constant.CACHE_PATH + entity1.getParentPath()),
+                            new DownloadResult<File>() {
                                 @Override
                                 public void onSuccess(List<File> output) {
+                                    Log.debug("success: length=" + output.size());
                                     if (output == null || output.size() < 2) {
+                                        NotificationUtils.errorNotification("Error: Download " + entity1.getPackageName()
+                                                + " Failure");
                                         return;
                                     }
                                     diff(project, output.get(0), output.get(1));
@@ -72,14 +78,20 @@ public class DiffSourceAction extends BaseSourceAction implements PopListView.On
 
                                 @Override
                                 public void onFailure(String msg, Throwable throwable) {
-                                    System.out.println("error =>" + msg);
+                                    NotificationUtils.errorNotification("Error:" + msg);
                                 }
-                            });
+                            }, entity1.isAndroidClass());
                 }
             });
         }
     }
 
+    /**
+     * 调用 Android 文件对比
+     * @param project
+     * @param f1
+     * @param f2
+     */
     public static void diff(final Project project, final File f1, final File f2) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override

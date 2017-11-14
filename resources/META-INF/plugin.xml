@@ -49,6 +49,12 @@
             <separator/>
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </group>
+        <group text="Android Source Viewer" popup="true" id="CleanActionGroup">
+            <action id="CleanAction" class="com.apkfuns.androidsourceviewer.action.CleanAction" text="Clean Cache"
+                    description="Clean Cache File" icon="/icons/java.png">
+            </action>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </group>
     </actions>
 
 </idea-plugin>
