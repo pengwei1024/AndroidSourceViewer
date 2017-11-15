@@ -14,6 +14,7 @@ public class PluginIcons {
 
     public static final Icon ICON_JAVA = intellijLoad("/fileTypes/java.png");
     public static final Icon ICON_DIFF = intellijLoad("/actions/diff.png");
+    public static final Icon GradleSync = load("/icons/gradlesync.png");
 
     private static Icon load(String path) {
         try {

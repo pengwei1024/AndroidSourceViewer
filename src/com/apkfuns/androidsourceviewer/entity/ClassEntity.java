@@ -70,12 +70,7 @@ public class ClassEntity {
      * @return
      */
     public boolean isAndroidClass() {
-        for (String prefix : Constant.ANDROID_PACKAGE_PREFIX) {
-            if (packageName.startsWith(prefix)) {
-                return true;
-            }
-        }
-        return false;
+        return Utils.isAndroidClass(packageName);
     }
 
     public void setDownloadUrl(String downloadUrl) {

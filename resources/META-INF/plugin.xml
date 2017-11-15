@@ -2,16 +2,20 @@
     <id>com.apkfuns.androidsourceviewer</id>
     <name>AndroidSourceViewer</name>
     <version>1.0</version>
-    <vendor email="pengwei1024@gmail.com" url="http://www.apkfuns.com">pengwei</vendor>
+    <vendor email="pengwei1024@gmail.com" url="https://github.com/pengwei1024/AndroidSourceViewer">舞影凌风</vendor>
 
     <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+        Android Source Viewer Plugin for Android Studio <br/>
+        <img src='http://qiniu.apkfuns.com/ic-AndroidSourceViewer-plugin.png' width='310' height='254'/> <br/>
     ]]></description>
 
     <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+      <ul>
+        <li>
+            <b>1.0</b><br/>
+            1.View Android Source  2.Diff Android Source  3.Android Developer Reference
+        </li>
+      </ul>
     ]]>
     </change-notes>
 
@@ -42,6 +46,12 @@
         <action id="DiffSourceAction" class="com.apkfuns.androidsourceviewer.action.DiffSourceAction"
                 text="Diff Android Source" icon="/icons/diff.png"
                 description="Diff Android Source Code">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 2"/>
+        </action>
+        <action id="AndroidDeveloperAction" class="com.apkfuns.androidsourceviewer.action.AndroidDeveloperAction"
+                text="Android Developer Reference" icon="/icons/android.png"
+                description="Android Developer Viewer">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 2"/>
         </action>

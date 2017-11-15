@@ -11,6 +11,7 @@ import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -22,10 +23,13 @@ import com.intellij.psi.PsiVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +60,7 @@ public class Utils {
             } else {
                 packageName = cls.getQualifiedName();
             }
-            System.out.println("class => " + packageName);
+            Log.debug("class => " + packageName);
         } else if (element instanceof PsiMethod) {
             PsiMethod method = (PsiMethod) element;
             Log.debug("method => " + method.getName() + " # "
@@ -75,6 +79,34 @@ public class Utils {
             Log.debug("cls = " + element.getClass());
         }
         return packageName;
+    }
+
+    /**
+     * 打开浏览器
+     *
+     * @param url
+     */
+    public static void openUrl(String url) {
+        if (SystemInfo.isWindows) {
+            try {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                URI uri = new URI(url);
+                Desktop desktop = null;
+                if (Desktop.isDesktopSupported()) {
+                    desktop = Desktop.getDesktop();
+                }
+                if (desktop != null) {
+                    desktop.browse(uri);
+                }
+            } catch (URISyntaxException | IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -250,7 +282,7 @@ public class Utils {
         try {
             String requestPath = classEntity.getPackageName().replaceAll("\\.", "%2F");
             String url = String.format(Constant.ANDROID_SEARCH, classEntity.getVersionName(), requestPath);
-            System.out.println("url=" + url);
+            Log.debug("url=" + url);
             String result = Utils.syncGet(url);
             result = result.replace("\n", "");
             Pattern pattern = Pattern.compile("id=\"results\".*class=\"f\"><a href=\"(.*?)\">");
@@ -263,5 +295,19 @@ public class Utils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 是否为 Android 类
+     * @param packageName
+     * @return
+     */
+    public static boolean isAndroidClass(String packageName) {
+        for (String prefix : Constant.ANDROID_PACKAGE_PREFIX) {
+            if (packageName.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

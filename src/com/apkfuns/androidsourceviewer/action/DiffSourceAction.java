@@ -55,7 +55,7 @@ public class DiffSourceAction extends BaseSourceAction implements PopListView.On
             }
             popListView.createList("Choose another version", newArray, this);
         } else {
-            System.out.println("second =>" + value);
+            Log.debug("second =>" + value);
             String title = "Download：" + packageName;
             ProgressManager.getInstance().run(new Task.Backgroundable(project, title) {
                 @Override
