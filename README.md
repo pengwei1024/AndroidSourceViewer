@@ -7,6 +7,10 @@ Android Studio 在线查看 Android 和 Java 指定版本源码插件
 * 支持 Android 官网文档查看和方法定位
 
 ## Screenshot
+![](./screenshot/ss1.png)<br>
+![](./screenshot/ss2.png)<br>
+![](./screenshot/ss3.png)<br>
+![](./screenshot/ss4.gif)<br>
 
 ## Download
 * Android Studio 插件中心搜索 `AndroidSourceViewer`
