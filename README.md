@@ -23,6 +23,10 @@ Android Studio 在线查看 Android 和 Java 指定版本源码插件
 * 本地源码不支持方法的定位
 * 还有很多其他尚未发现的缺陷和不足，欢迎提交 issue 和 PR
 
+## Thanks
+* Android 源码来自 [http://androidxref.com](http://androidxref.com)
+* Java 源码来自 [http://grepcode.com/](http://grepcode.com/)
+
 ## License
 <pre>
 Licensed under the Apache License, Version 2.0 (the "License");
