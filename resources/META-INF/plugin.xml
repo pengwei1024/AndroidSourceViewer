@@ -53,7 +53,7 @@
                 text="Android Developer Reference" icon="/icons/android.png"
                 description="Android Developer Viewer">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 2"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 3"/>
         </action>
         <group>
             <separator/>
