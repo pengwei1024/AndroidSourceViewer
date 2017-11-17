@@ -15,7 +15,7 @@ Android Studio 在线查看 Android 和 Java 指定版本源码插件
 
 ## Download
 * Android Studio 插件中心搜索 `AndroidSourceViewer`&nbsp;&nbsp;
-* 下载[AndroidSourceViewer.jar](./jar) <br/>
+* 下载[AndroidSourceViewer-1.0.2.jar](./jar) <br/>
 * <font color='red'>目前插件还在 Jetbrains 审核阶段, 建议下载Jar本地安装</font>
 
 ## Improve
@@ -24,7 +24,7 @@ Android Studio 在线查看 Android 和 Java 指定版本源码插件
 * 还有很多其他尚未发现的缺陷和不足，欢迎提交 issue 和 PR
 
 ## Thanks
-* Android 源码来自 [http://androidxref.com](http://androidxref.com)
+* Android 源码来自 [http://androidxref.com](http://androidxref.com)、[https://android.googlesource.com/](https://android.googlesource.com/)
 * Java 源码来自 [http://grepcode.com/](http://grepcode.com/)
 
 ## License
