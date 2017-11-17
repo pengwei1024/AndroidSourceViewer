@@ -40,4 +40,7 @@ public interface Constant {
 
     // Android 搜索
     String ANDROID_SEARCH = "http://androidxref.com/%s/search?q=&defs=&refs=&path=%s&hist=&project=art&project=bionic&project=bootable&project=build&project=cts&project=dalvik&project=developers&project=development&project=device&project=docs&project=external&project=frameworks&project=hardware&project=kernel&project=libcore&project=libnativehelper&project=packages&project=pdk&project=platform_testing&project=prebuilts&project=sdk&project=system&project=test&project=toolchain&project=tools";
+
+    // google 源码
+    String DOWNLOAD_GOOGLE_SOURCE = "http://source.apkfuns.com/?version=android-%s&class=%s";
 }

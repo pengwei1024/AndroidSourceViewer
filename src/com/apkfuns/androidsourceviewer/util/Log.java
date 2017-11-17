@@ -12,4 +12,10 @@ public class Log {
             System.out.println(msg);
         }
     }
+
+    public static void e(Throwable msg) {
+        if (DEBUG) {
+            msg.printStackTrace();
+        }
+    }
 }

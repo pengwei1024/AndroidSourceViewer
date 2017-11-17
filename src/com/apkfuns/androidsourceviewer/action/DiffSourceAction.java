@@ -1,11 +1,11 @@
 package com.apkfuns.androidsourceviewer.action;
 
+import com.apkfuns.androidsourceviewer.download.DownloadManager;
 import com.apkfuns.androidsourceviewer.entity.Constant;
 import com.apkfuns.androidsourceviewer.entity.ClassEntity;
 import com.apkfuns.androidsourceviewer.entity.DownloadResult;
 import com.apkfuns.androidsourceviewer.util.Log;
 import com.apkfuns.androidsourceviewer.util.NotificationUtils;
-import com.apkfuns.androidsourceviewer.util.Utils;
 import com.apkfuns.androidsourceviewer.widget.PopListView;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
@@ -62,7 +62,7 @@ public class DiffSourceAction extends BaseSourceAction implements PopListView.On
                 public void run(@NotNull ProgressIndicator progressIndicator) {
                     final ClassEntity entity1 = new ClassEntity(packageName, firstValue);
                     ClassEntity entity2 = new ClassEntity(packageName, value);
-                    Utils.downloadFile(new ClassEntity[]{entity1, entity2},
+                    DownloadManager.getInstance().downloadFile(new ClassEntity[]{entity1, entity2},
                             new File(Constant.CACHE_PATH + entity1.getParentPath()),
                             new DownloadResult<File>() {
                                 @Override
@@ -80,7 +80,7 @@ public class DiffSourceAction extends BaseSourceAction implements PopListView.On
                                 public void onFailure(String msg, Throwable throwable) {
                                     NotificationUtils.errorNotification("Error:" + msg);
                                 }
-                            }, entity1.isAndroidClass());
+                            });
                 }
             });
         }
@@ -96,15 +96,19 @@ public class DiffSourceAction extends BaseSourceAction implements PopListView.On
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-                VirtualFile v1 = LocalFileSystem.getInstance().findFileByIoFile(f1);
-                Document document1 = FileDocumentManager.getInstance().getDocument(v1);
-                FileDocumentContentImpl fileDocumentContent1 = new FileDocumentContentImpl(project, document1, v1);
-                VirtualFile v2 = LocalFileSystem.getInstance().findFileByIoFile(f2);
-                Document document2 = FileDocumentManager.getInstance().getDocument(v2);
-                FileDocumentContentImpl fileDocumentContent2 = new FileDocumentContentImpl(project, document2, v2);
-                SimpleDiffRequest simpleDiffRequest = new SimpleDiffRequest(Constant.TITLE, fileDocumentContent1, fileDocumentContent2,
-                        f1.getName(), f2.getName());
-                DiffManager.getInstance().showDiff(project, simpleDiffRequest);
+                try {
+                    VirtualFile v1 = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(f1);
+                    Document document1 = FileDocumentManager.getInstance().getDocument(v1);
+                    FileDocumentContentImpl fileDocumentContent1 = new FileDocumentContentImpl(project, document1, v1);
+                    VirtualFile v2 = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(f2);
+                    Document document2 = FileDocumentManager.getInstance().getDocument(v2);
+                    FileDocumentContentImpl fileDocumentContent2 = new FileDocumentContentImpl(project, document2, v2);
+                    SimpleDiffRequest simpleDiffRequest = new SimpleDiffRequest(Constant.TITLE, fileDocumentContent1, fileDocumentContent2,
+                            f1.getName(), f2.getName());
+                    DiffManager.getInstance().showDiff(project, simpleDiffRequest);
+                } catch (Exception e) {
+                    NotificationUtils.errorNotification("Diff Source Error:" + e.getMessage());
+                }
             }
         });
     }

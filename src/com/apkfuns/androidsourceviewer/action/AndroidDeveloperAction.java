@@ -9,8 +9,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 
-import java.net.URLEncoder;
-
 /**
  * 打开 Android 官方文档
  * https://developer.android.google.cn/reference/android/view/

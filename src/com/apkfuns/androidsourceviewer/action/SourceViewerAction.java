@@ -1,5 +1,6 @@
 package com.apkfuns.androidsourceviewer.action;
 
+import com.apkfuns.androidsourceviewer.download.DownloadManager;
 import com.apkfuns.androidsourceviewer.entity.ClassEntity;
 import com.apkfuns.androidsourceviewer.entity.Constant;
 import com.apkfuns.androidsourceviewer.entity.DownloadResult;
@@ -34,7 +35,7 @@ public class SourceViewerAction extends BaseSourceAction implements PopListView.
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 final ClassEntity entity = new ClassEntity(packageName, version);
-                Utils.downloadFile(new ClassEntity[]{entity},
+                DownloadManager.getInstance().downloadFile(new ClassEntity[]{entity},
                         new File(Constant.CACHE_PATH + entity.getParentPath()),
                         new DownloadResult<File>() {
                             @Override
@@ -52,7 +53,7 @@ public class SourceViewerAction extends BaseSourceAction implements PopListView.
                             public void onFailure(String msg, Throwable throwable) {
                                 NotificationUtils.errorNotification("Error:" + msg);
                             }
-                        }, entity.isAndroidClass());
+                        });
                 progressIndicator.setFraction(0.5);
             }
         });

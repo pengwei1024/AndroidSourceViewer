@@ -1,6 +1,5 @@
 package com.apkfuns.androidsourceviewer.util;
 
-import android.text.TextUtils;
 import com.apkfuns.androidsourceviewer.entity.Constant;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -28,7 +27,8 @@ public class NotificationUtils {
             public void run() {
                 Notification notification =
                         NOTIFICATION_GROUP.createNotification(Constant.TITLE,
-                                TextUtils.isEmpty(message) ? "[Empty]" : message, type, new NotificationListener() {
+                                message == null || message.trim().length() == 0 ? "[Empty]" : message,
+                                type, new NotificationListener() {
                                     @Override
                                     public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent hyperlinkEvent) {
                                         URL url = hyperlinkEvent.getURL();
