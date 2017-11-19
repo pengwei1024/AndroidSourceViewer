@@ -14,9 +14,8 @@ Android Studio 在线查看 Android 和 Java 指定版本源码插件
 ![](./screenshot/ss5.gif)<br>
 
 ## Download
-* Android Studio 插件中心搜索 `AndroidSourceViewer`&nbsp;&nbsp;
+* Android Studio / Intellij IDEA 插件中心搜索 `AndroidSourceViewer`&nbsp;&nbsp;
 * 下载[AndroidSourceViewer-1.0.2.jar](./jar) <br/>
-* <font color='red'>目前插件还在 Jetbrains 审核阶段, 建议下载Jar本地安装</font>
 
 ## Improve
 * 不支持查找变量对象是内部类
