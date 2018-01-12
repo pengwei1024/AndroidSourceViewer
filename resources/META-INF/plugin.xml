@@ -61,6 +61,12 @@
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 3"/>
         </action>
+        <action id="GlobalSearchAction" class="com.apkfuns.androidsourceviewer.action.GlobalSearchAction"
+                text="Android Source Search" icon="/icons/android.png"
+                description="Android Source Search">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 4"/>
+        </action>
         <group>
             <separator/>
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
