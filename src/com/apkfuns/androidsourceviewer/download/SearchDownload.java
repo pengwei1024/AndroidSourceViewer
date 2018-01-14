@@ -7,10 +7,12 @@ import com.apkfuns.androidsourceviewer.util.Log;
 import com.apkfuns.androidsourceviewer.util.Utils;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -48,7 +50,15 @@ public class SearchDownload implements IDownload<File> {
     }
 
     public static String androidOnlineSearch(final ClassEntity classEntity) throws Exception {
-        String requestPath = classEntity.getPackageName().replaceAll("\\.", "%2F");
+        return androidOnlineSearch(classEntity, true);
+    }
+
+    @Nullable
+    public static String androidOnlineSearch(final ClassEntity classEntity, boolean format) throws Exception {
+        String requestPath = classEntity.getPackageName();
+        if (format) {
+            requestPath = requestPath.replaceAll("\\.", "%2F");
+        }
         String url = String.format(Constant.ANDROID_SEARCH, classEntity.getVersionName(), requestPath);
         Log.debug("url=" + url);
         String result = HttpUtil.syncGet(url);
@@ -60,5 +70,29 @@ public class SearchDownload implements IDownload<File> {
             return res.replace("/xref/", "/raw/");
         }
         return null;
+    }
+
+    /**
+     * 源码搜索， 支持多条结果
+     * @param classEntity
+     * @param format
+     * @return
+     * @throws Exception
+     */
+    public static List<String> onlineSearch(final ClassEntity classEntity, boolean format) throws Exception {
+        String requestPath = classEntity.getPackageName();
+        if (format) {
+            requestPath = requestPath.replaceAll("\\.", "%2F");
+        }
+        List<String> arrays = new ArrayList<>();
+        String url = String.format(Constant.ANDROID_SEARCH, classEntity.getVersionName(), requestPath);
+        String result = HttpUtil.syncGet(url);
+        result = result.replace("\n", "");
+        Pattern pattern = Pattern.compile("class=\"f\"><a href=\"(.*?)\">");
+        Matcher matcher = pattern.matcher(result);
+        while (matcher.find()) {
+            arrays.add(matcher.group(1));
+        }
+        return arrays;
     }
 }
