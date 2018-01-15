@@ -2,6 +2,8 @@ package com.apkfuns.androidsourceviewer.widget;
 
 import com.apkfuns.androidsourceviewer.download.SearchDownload;
 import com.apkfuns.androidsourceviewer.entity.ClassEntity;
+import com.apkfuns.androidsourceviewer.entity.ListDoubleClickEvent;
+import com.apkfuns.androidsourceviewer.util.Log;
 import com.apkfuns.androidsourceviewer.util.TextUtils;
 import com.apkfuns.androidsourceviewer.util.ThreadPoolManager;
 
@@ -13,7 +15,8 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public class GlobalSearchDialog extends JDialog implements ListSelectionListener {
+public class GlobalSearchDialog extends JDialog implements ListSelectionListener,
+        ListDoubleClickEvent.DoubleClickListener<String> {
 
     private static final String SEARCH_RESULT_EMPTY = "Result Empty!";
     private static final String[] SEARCH_EXT = {".java", ".c", ".cpp", ".cc", "*"};
@@ -32,6 +35,8 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
         this.setLocationRelativeTo(null);
         listView.setModel(dataSet);
         listView.setFixedCellHeight(25);
+        listView.addListSelectionListener(this);
+        listView.addMouseListener(new ListDoubleClickEvent<String>(this));
         searchBar.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -44,7 +49,7 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
     /**
      * 开始搜索
      */
-    private void startSearch() {
+    private synchronized void startSearch() {
         String text = searchBar.getText();
         if (TextUtils.isEmpty(text)) {
             return;
@@ -89,7 +94,13 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if(!listView.getValueIsAdjusting()){   // 设置只有释放鼠标时才触发
-            System.out.println(listView.getSelectedValue());
+            // item click
         }
+    }
+
+    @Override
+    public void onDoubleClick(JList<String> jList, int position, String selectedValue) {
+        dispose();
+        System.out.println("selected:" + selectedValue);
     }
 }

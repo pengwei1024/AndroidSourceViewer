@@ -20,7 +20,7 @@ public class DownloadManager {
     }
 
     // 网络测探
-    private final String NET_DETECTOR = "http://androidxref.com/6.0.1_r10/xref/frameworks/base/core/java/android/app/Activity.java";
+    private static final String NET_DETECTOR = "http://androidxref.com/6.0.1_r10/xref/frameworks/base/core/java/android/app/Activity.java";
     private final static long MAX_WAIT_STAMP = 30 * 60 * 1000;
 
     private DownloadManager() {
