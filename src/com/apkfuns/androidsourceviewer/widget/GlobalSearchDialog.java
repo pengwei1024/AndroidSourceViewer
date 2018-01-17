@@ -26,8 +26,9 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
     private JList<String> listView;
     private ScheduledFuture searchTask;
     private final DefaultListModel<String> dataSet = new DefaultListModel<String>();
+    private final SearchFinishResult searchFinishResult;
 
-    public GlobalSearchDialog() {
+    public GlobalSearchDialog(SearchFinishResult result) {
         setContentPane(contentPane);
         setModal(true);
         setTitle("Android Source Search");
@@ -44,6 +45,7 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
             }
         });
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.searchFinishResult = result;
     }
 
     /**
@@ -60,11 +62,16 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
         searchTask = ThreadPoolManager.getInstance().addTaskDelay(new Runnable() {
             @Override
             public void run() {
-                dataSet.clear();
+                boolean firstReturn = true;
+                Log.debug("startSearch, key=" + text  + ", thread=" + Thread.currentThread().getName());
                 try {
                     if (text.contains(".")) {
                         ClassEntity classEntity = new ClassEntity(text, "7.1.2_r36");
                         List<String> urls = SearchDownload.onlineSearch(classEntity, false);
+                        if (firstReturn) {
+                            dataSet.clear();
+                            firstReturn = false;
+                        }
                         for (String url : urls) {
                             if (!TextUtils.isEmpty(url)) {
                                 dataSet.addElement(url);
@@ -74,6 +81,10 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
                         for (String ext: SEARCH_EXT) {
                             ClassEntity classEntity = new ClassEntity(text + ext, "7.1.2_r36");
                             List<String> urls = SearchDownload.onlineSearch(classEntity, false);
+                            if (firstReturn) {
+                                dataSet.clear();
+                                firstReturn = false;
+                            }
                             for (String url : urls) {
                                 if (!TextUtils.isEmpty(url)) {
                                     dataSet.addElement(url);
@@ -83,12 +94,13 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-                if (dataSet.isEmpty()) {
-                    dataSet.addElement(SEARCH_RESULT_EMPTY);
+                } finally {
+                    if (dataSet.isEmpty()) {
+                        dataSet.addElement(SEARCH_RESULT_EMPTY);
+                    }
                 }
             }
-        }, 500);
+        }, 100);
     }
 
     @Override
@@ -100,7 +112,17 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
 
     @Override
     public void onDoubleClick(JList<String> jList, int position, String selectedValue) {
+        if (SEARCH_RESULT_EMPTY.equals(selectedValue)) {
+            return;
+        }
         dispose();
-        System.out.println("selected:" + selectedValue);
+        if (searchFinishResult != null) {
+            selectedValue = "http://androidxref.com" + selectedValue.replace("/xref/", "/raw/");
+            searchFinishResult.OnResult(selectedValue);
+        }
+    }
+
+    public interface SearchFinishResult {
+        void OnResult(String result);
     }
 }
