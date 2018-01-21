@@ -1,4 +1,4 @@
-package com.apkfuns.androidsourceviewer.action;
+package com.apkfuns.androidsourceviewer.action.base;
 
 import com.apkfuns.androidsourceviewer.util.NotificationUtils;
 import com.apkfuns.androidsourceviewer.util.Utils;
@@ -8,17 +8,16 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 
-public abstract class BaseSourceAction extends AnAction {
+public abstract class BaseSourceAction extends BaseAction {
 
     protected String packageName;
-    protected Project project;
     protected AnActionEvent actionEvent;
     protected PsiElement element;
     protected String[] data;
 
     @Override
     public final void actionPerformed(AnActionEvent event) {
-        this.project = event.getProject();
+        super.actionPerformed(event);
         this.actionEvent = event;
         packageName = Utils.getClassPath(event);
         element = event.getData(LangDataKeys.PSI_ELEMENT);
@@ -28,7 +27,10 @@ public abstract class BaseSourceAction extends AnAction {
         }
         this.selectActionPerformed(event, element, packageName);
         if (shouldSelectVersion()) {
-            data = Utils.getVersionList(packageName);
+            data = versionList();
+            if (data == null) {
+                data = Utils.getVersionList(packageName);
+            }
             if (data == null) {
                 NotificationUtils.infoNotification("Invalid PackageName:" + packageName);
                 return;
@@ -62,6 +64,14 @@ public abstract class BaseSourceAction extends AnAction {
      */
     protected boolean shouldSelectVersion() {
         return true;
+    }
+
+    /**
+     * 展示版本列表
+     * @return String[]
+     */
+    protected String[] versionList() {
+        return null;
     }
 
 }

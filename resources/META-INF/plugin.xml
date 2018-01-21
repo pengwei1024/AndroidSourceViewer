@@ -32,6 +32,13 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <codeInsight.lineMarkerProvider
+                language="JAVA"
+                implementationClass="com.apkfuns.androidsourceviewer.provider.NativeMethodProvider"/>
+    </extensions>
+
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -62,7 +69,7 @@
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 3"/>
         </action>
         <action id="GlobalSearchAction" class="com.apkfuns.androidsourceviewer.action.GlobalSearchAction"
-                text="Android Source Search" icon="/icons/android.png"
+                text="Android Source Search" icon="/icons/findPlain.png"
                 description="Android Source Search">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 4"/>

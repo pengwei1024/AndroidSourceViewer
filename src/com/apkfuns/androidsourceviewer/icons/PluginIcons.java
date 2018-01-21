@@ -15,11 +15,12 @@ public class PluginIcons {
     public static final Icon ICON_JAVA = intellijLoad("/fileTypes/java.png");
     public static final Icon ICON_DIFF = intellijLoad("/actions/diff.png");
     public static final Icon GradleSync = load("/icons/gradlesync.png");
+    public static final Icon NATIVE = load("/icons/class.png");
 
     private static Icon load(String path) {
         try {
             return IconLoader.getIcon(path, PluginIcons.class);
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             return null;
         }
     }

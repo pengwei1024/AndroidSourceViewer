@@ -79,6 +79,7 @@ public class SearchDownload implements IDownload<File> {
      * @return
      * @throws Exception
      */
+    @NotNull
     public static List<String> onlineSearch(final ClassEntity classEntity, boolean format) throws Exception {
         String requestPath = classEntity.getPackageName();
         if (format) {

@@ -4,8 +4,8 @@ import com.apkfuns.androidsourceviewer.download.SearchDownload;
 import com.apkfuns.androidsourceviewer.entity.ClassEntity;
 import com.apkfuns.androidsourceviewer.entity.ListDoubleClickEvent;
 import com.apkfuns.androidsourceviewer.util.Log;
-import com.apkfuns.androidsourceviewer.util.TextUtils;
 import com.apkfuns.androidsourceviewer.util.ThreadPoolManager;
+import com.apkfuns.androidsourceviewer.util.Utils;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -53,7 +53,7 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
      */
     private synchronized void startSearch() {
         String text = searchBar.getText();
-        if (TextUtils.isEmpty(text)) {
+        if (Utils.isEmpty(text)) {
             return;
         }
         if (searchTask != null) {
@@ -68,12 +68,9 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
                     if (text.contains(".")) {
                         ClassEntity classEntity = new ClassEntity(text, "7.1.2_r36");
                         List<String> urls = SearchDownload.onlineSearch(classEntity, false);
-                        if (firstReturn) {
-                            dataSet.clear();
-                            firstReturn = false;
-                        }
+                        dataSet.clear();
                         for (String url : urls) {
-                            if (!TextUtils.isEmpty(url)) {
+                            if (!Utils.isEmpty(url)) {
                                 dataSet.addElement(url);
                             }
                         }
@@ -86,7 +83,7 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
                                 firstReturn = false;
                             }
                             for (String url : urls) {
-                                if (!TextUtils.isEmpty(url)) {
+                                if (!Utils.isEmpty(url)) {
                                     dataSet.addElement(url);
                                 }
                             }
@@ -100,7 +97,7 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
                     }
                 }
             }
-        }, 100);
+        }, 200);
     }
 
     @Override
@@ -116,7 +113,7 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
             return;
         }
         dispose();
-        if (searchFinishResult != null) {
+        if (searchFinishResult != null && !Utils.isEmpty(selectedValue)) {
             selectedValue = "http://androidxref.com" + selectedValue.replace("/xref/", "/raw/");
             searchFinishResult.OnResult(selectedValue);
         }
