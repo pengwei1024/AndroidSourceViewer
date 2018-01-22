@@ -109,6 +109,9 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
 
     @Override
     public void onDoubleClick(JList<String> jList, int position, String selectedValue) {
+        if (Utils.isEmpty(selectedValue)) {
+            return;
+        }
         if (SEARCH_RESULT_EMPTY.equals(selectedValue)) {
             return;
         }
