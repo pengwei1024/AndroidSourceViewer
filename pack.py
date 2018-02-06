@@ -10,5 +10,5 @@ print(version)
 path = "./jar"
 if not os.path.exists(path):
     os.makedirs(path)
-os.rename('./AndroidSourceViewer.jar', "%s/AndroidSourceViewer-%s.jar"%(path, version))
+os.rename('./AndroidSourceViewer.zip', "%s/AndroidSourceViewer-%s.zip"%(path, version))
 
