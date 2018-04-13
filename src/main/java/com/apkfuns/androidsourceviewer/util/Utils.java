@@ -169,7 +169,7 @@ public class Utils {
             return;
         }
         try {
-            java.awt.Desktop.getDesktop().open(file);
+            Desktop.getDesktop().open(file);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,0 +1,27 @@
+plugins {
+    id 'org.jetbrains.intellij' version '0.3.1'
+}
+
+group 'com.apkfuns'
+version '1.0'
+
+intellij {
+    version '2017.3.5'
+}
+patchPluginXml {
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
+}
+
+repositories {
+    maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.alibaba:fastjson:1.2.46'
+    compile 'commons-io:commons-io:2.6'
+}

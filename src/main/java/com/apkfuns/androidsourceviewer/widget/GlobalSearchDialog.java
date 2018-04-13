@@ -1,8 +1,9 @@
 package com.apkfuns.androidsourceviewer.widget;
 
-import com.apkfuns.androidsourceviewer.download.SearchDownload;
-import com.apkfuns.androidsourceviewer.entity.ClassEntity;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.apkfuns.androidsourceviewer.entity.ListDoubleClickEvent;
+import com.apkfuns.androidsourceviewer.util.HttpUtil;
 import com.apkfuns.androidsourceviewer.util.Log;
 import com.apkfuns.androidsourceviewer.util.ThreadPoolManager;
 import com.apkfuns.androidsourceviewer.util.Utils;
@@ -12,7 +13,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
 public class GlobalSearchDialog extends JDialog implements ListSelectionListener,
@@ -29,6 +29,14 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
     private final SearchFinishResult searchFinishResult;
 
     public GlobalSearchDialog(SearchFinishResult result) {
+        this(null, result);
+    }
+
+    /**
+     * @param keyword searchBar
+     * @param result 搜索结果回调
+     */
+    public GlobalSearchDialog(String keyword, SearchFinishResult result) {
         setContentPane(contentPane);
         setModal(true);
         setTitle("Android Source Search");
@@ -46,13 +54,17 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
         });
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.searchFinishResult = result;
+        if (!Utils.isEmpty(keyword)) {
+            searchBar.setText(keyword);
+            startSearch();
+        }
     }
 
     /**
      * 开始搜索
      */
     private synchronized void startSearch() {
-        String text = searchBar.getText();
+        final String text = searchBar.getText();
         if (Utils.isEmpty(text)) {
             return;
         }
@@ -65,39 +77,62 @@ public class GlobalSearchDialog extends JDialog implements ListSelectionListener
                 boolean firstReturn = true;
                 Log.debug("startSearch, key=" + text  + ", thread=" + Thread.currentThread().getName());
                 try {
-                    if (text.contains(".")) {
-                        ClassEntity classEntity = new ClassEntity(text, "7.1.2_r36");
-                        List<String> urls = SearchDownload.onlineSearch(classEntity, false);
-                        dataSet.clear();
-                        for (String url : urls) {
-                            if (!Utils.isEmpty(url)) {
-                                dataSet.addElement(url);
-                            }
-                        }
-                    } else {
-                        for (String ext: SEARCH_EXT) {
-                            ClassEntity classEntity = new ClassEntity(text + ext, "7.1.2_r36");
-                            List<String> urls = SearchDownload.onlineSearch(classEntity, false);
-                            if (firstReturn) {
-                                dataSet.clear();
-                                firstReturn = false;
-                            }
-                            for (String url : urls) {
-                                if (!Utils.isEmpty(url)) {
-                                    dataSet.addElement(url);
+                    String result = HttpUtil.syncGet("http://source.apkfuns.com/yahoo.php?s=" + text);
+                    JSONObject jsonObject = JSONObject.parseObject(result);
+                    if (jsonObject.containsKey("status") && jsonObject.getIntValue("status") == 0) {
+                        String keyword = jsonObject.getString("keyword");
+                        if (text.equals(keyword)) {
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            dataSet.clear();
+                            if (!jsonArray.isEmpty()) {
+                                for (int i = 0; i < jsonArray.size(); i++) {
+                                    dataSet.addElement(jsonArray.getJSONObject(i).getString("name"));
                                 }
+                            } else {
+                                dataSet.addElement(SEARCH_RESULT_EMPTY);
                             }
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                } finally {
                     if (dataSet.isEmpty()) {
                         dataSet.addElement(SEARCH_RESULT_EMPTY);
                     }
                 }
+//                try {
+//                    if (text.contains(".")) {
+//                        ClassEntity classEntity = new ClassEntity(text, "7.1.2_r36");
+//                        List<String> urls = SearchDownload.onlineSearch(classEntity, false);
+//                        dataSet.clear();
+//                        for (String url : urls) {
+//                            if (!Utils.isEmpty(url)) {
+//                                dataSet.addElement(url);
+//                            }
+//                        }
+//                    } else {
+//                        for (String ext: SEARCH_EXT) {
+//                            ClassEntity classEntity = new ClassEntity(text + ext, "7.1.2_r36");
+//                            List<String> urls = SearchDownload.onlineSearch(classEntity, false);
+//                            if (firstReturn) {
+//                                dataSet.clear();
+//                                firstReturn = false;
+//                            }
+//                            for (String url : urls) {
+//                                if (!Utils.isEmpty(url)) {
+//                                    dataSet.addElement(url);
+//                                }
+//                            }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    if (dataSet.isEmpty()) {
+//                        dataSet.addElement(SEARCH_RESULT_EMPTY);
+//                    }
+//                }
             }
-        }, 200);
+        }, 100);
     }
 
     @Override

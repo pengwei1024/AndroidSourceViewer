@@ -1,10 +1,13 @@
 package com.apkfuns.androidsourceviewer.action;
 
+import com.apkfuns.androidsourceviewer.action.base.BaseAction;
 import com.apkfuns.androidsourceviewer.entity.Constant;
 import com.apkfuns.androidsourceviewer.util.Utils;
 import com.apkfuns.androidsourceviewer.widget.GlobalSearchDialog;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -15,12 +18,16 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
-public class GlobalSearchAction extends AnAction implements GlobalSearchDialog.SearchFinishResult {
-    private Project project;
+public class GlobalSearchAction extends BaseAction implements GlobalSearchDialog.SearchFinishResult {
     @Override
     public void actionPerformed(AnActionEvent event) {
-        this.project = event.getProject();
-        new GlobalSearchDialog(this).setVisible(true);
+        super.actionPerformed(event);
+        final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+        String selectText = editor.getSelectionModel().getSelectedText();
+        if (selectText != null && selectText.length() > 40) {
+            selectText = selectText.substring(0, 40);
+        }
+        new GlobalSearchDialog(selectText, this).setVisible(true);
     }
 
     @Override
