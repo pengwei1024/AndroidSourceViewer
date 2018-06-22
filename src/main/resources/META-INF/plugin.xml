@@ -1,4 +1,4 @@
-<idea-plugin version="2">
+<idea-plugin>
     <id>com.apkfuns.androidsourceviewer</id>
     <name>AndroidSourceViewer</name>
     <version>1.0.2</version>
@@ -8,20 +8,6 @@
         Android Source Viewer Plugin for Android Studio <br/>
         <img src='http://qiniu.apkfuns.com/ic-AndroidSourceViewer-plugin.png' width='310' height='254'/> <br/>
     ]]></description>
-
-    <change-notes><![CDATA[
-      <ul>
-        <li>
-            <b>1.0.2</b><br/>
-            support android.googlesource.com
-        </li>
-        <li>
-            <b>1.0</b><br/>
-            1.View Android Source 2.Diff Android Source  3.Android Developer Reference
-        </li>
-      </ul>
-    ]]>
-    </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
     <idea-version since-build="141.0"/>
@@ -51,8 +37,8 @@
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </group>
         <action id="SourceViewerAction" class="com.apkfuns.androidsourceviewer.action.SourceViewerAction"
-            text="View Android Source" icon="/icons/java.png"
-            description="View Android Source Code">
+                text="View Android Source" icon="/icons/java.png"
+                description="View Android Source Code">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 1"/>
         </action>

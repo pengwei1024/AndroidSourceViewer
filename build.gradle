@@ -15,7 +15,7 @@ plugins {
 }
 
 group 'com.apkfuns'
-version '1.0'
+version '1.0.3'
 
 intellij {
     version '2018.1.3'
@@ -23,8 +23,25 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      <ul>
+        <li>
+            <b>1.0.3</b><br>
+            support native Source
+        </li>
+        <li>
+            <b>1.0.2</b><br>
+            support android.googlesource.com
+        </li>
+        <li>
+            <b>1.0</b><br>
+                1.View Android Source<br>
+                2.Diff Android Source<br>
+                3.Android Developer Reference
+        </li>
+      </ul>
+    """
+    sinceBuild "141"
+    untilBuild "181.*"
 }
 
 sourceCompatibility = 1.8
