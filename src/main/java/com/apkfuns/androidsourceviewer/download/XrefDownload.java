@@ -15,17 +15,17 @@ import java.util.List;
 public class XrefDownload implements IDownload<File> {
     @Override
     public Pair<Boolean, List<File>> onDownload(@NotNull ClassEntity[] classEntities, @NotNull File outputFolder) {
-        List<File> fileList = new ArrayList<File>();
-        for (int i = 0; i < classEntities.length; i++) {
-            String url = classEntities[i].getDownloadUrl();
+        List<File> fileList = new ArrayList<>();
+        for (ClassEntity classEntity : classEntities) {
+            String url = classEntity.getDownloadUrl();
             if (url == null) {
                 continue;
             }
             String filename;
-            if (Utils.isEmpty(classEntities[i].getSaveName())) {
+            if (Utils.isEmpty(classEntity.getSaveName())) {
                 filename = url.substring(url.lastIndexOf("/") + 1);
             } else {
-                filename = classEntities[i].getSaveName();
+                filename = classEntity.getSaveName();
             }
             File outFile = new File(outputFolder, filename);
             if (outFile.exists()) {
