@@ -2,7 +2,7 @@ package com.apkfuns.androidsourceviewer.action;
 
 import com.apkfuns.androidsourceviewer.action.base.BaseSourceAction;
 import com.apkfuns.androidsourceviewer.download.DownloadManager;
-import com.apkfuns.androidsourceviewer.entity.Constant;
+import com.apkfuns.androidsourceviewer.app.Constant;
 import com.apkfuns.androidsourceviewer.entity.ClassEntity;
 import com.apkfuns.androidsourceviewer.entity.DownloadResult;
 import com.apkfuns.androidsourceviewer.util.Log;

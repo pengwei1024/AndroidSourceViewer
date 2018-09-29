@@ -1,7 +1,11 @@
 package com.apkfuns.androidsourceviewer.util;
 
+
 import java.util.concurrent.*;
 
+/**
+ * Thread Pool Manager
+ */
 public class ThreadPoolManager {
     private static ThreadPoolManager singleton;
     private ScheduledExecutorService serviceDelayManager;

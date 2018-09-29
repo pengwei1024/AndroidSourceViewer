@@ -1,7 +1,7 @@
 package com.apkfuns.androidsourceviewer.download;
 
 import com.apkfuns.androidsourceviewer.entity.ClassEntity;
-import com.apkfuns.androidsourceviewer.entity.Constant;
+import com.apkfuns.androidsourceviewer.app.Constant;
 import com.apkfuns.androidsourceviewer.util.FileUtil;
 import com.apkfuns.androidsourceviewer.util.Log;
 import com.apkfuns.androidsourceviewer.util.Utils;

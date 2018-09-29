@@ -1,17 +1,15 @@
 package com.apkfuns.androidsourceviewer.action;
 
 import com.apkfuns.androidsourceviewer.action.base.BaseAction;
-import com.apkfuns.androidsourceviewer.entity.Constant;
+import com.apkfuns.androidsourceviewer.app.Constant;
 import com.apkfuns.androidsourceviewer.util.Utils;
 import com.apkfuns.androidsourceviewer.widget.GlobalSearchDialog;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
 import com.intellij.platform.templates.github.DownloadUtil;
 import org.jetbrains.annotations.NotNull;
 

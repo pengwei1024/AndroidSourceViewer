@@ -1,24 +1,24 @@
 package com.apkfuns.androidsourceviewer.action;
 
 import com.apkfuns.androidsourceviewer.action.base.BaseSourceAction;
-import com.apkfuns.androidsourceviewer.util.Log;
 import com.apkfuns.androidsourceviewer.util.NotificationUtils;
 import com.apkfuns.androidsourceviewer.util.Utils;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 打开 Android 官方文档
- * https://developer.android.google.cn/reference/android/view/
- * View.OnClickListener.html#onClick(android.view.View)
- * https://developer.android.google.cn/reference/android/app/
- * Activity.html#onRestoreInstanceState(android.os.Bundle)
+ * https://developer.android.google.cn/reference/android/view/View.OnClickListener.html#onClick(android.view.View)
+ * https://developer.android.google.cn/reference/android/app/Activity.html#onRestoreInstanceState(android.os.Bundle)
  */
 public class AndroidDeveloperAction extends BaseSourceAction {
-    final String baseUrl = "https://developer.android.google.cn/reference/";
+    private static final Logger LOG = Logger.getInstance(AndroidDeveloperAction.class);
+    private static final String BASE_URL = "https://developer.android.google.cn/reference/";
 
     @Override
     protected void selectActionPerformed(AnActionEvent event, PsiElement element, String packageName) {
@@ -26,7 +26,7 @@ public class AndroidDeveloperAction extends BaseSourceAction {
             NotificationUtils.infoNotification("Must be Android class or Method");
             return;
         }
-        String linkUrl = baseUrl;
+        String linkUrl = BASE_URL;
         if (element instanceof PsiMethod) {
             PsiMethod psiMethod = (PsiMethod) element;
             PsiParameter[] parameters = psiMethod.getParameterList().getParameters();
@@ -45,7 +45,7 @@ public class AndroidDeveloperAction extends BaseSourceAction {
             PsiClass psiClass = (PsiClass) element;
             linkUrl += getRealPackage(psiClass);
         }
-        Log.debug("linkUrl= " + linkUrl);
+        LOG.info("linkUrl= " + linkUrl);
         Utils.openUrl(linkUrl);
     }
 
@@ -57,15 +57,21 @@ public class AndroidDeveloperAction extends BaseSourceAction {
     /**
      * 替换成 Developer 需要的包名
      * 如 android.view.View.OnClickListener 替换成 android/view/View.OnClickListener.html
-     * @param psiClass
-     * @return
+     * @param psiClass PsiClass
+     * @return class path
      */
-    private String getRealPackage(PsiClass psiClass) {
+    private String getRealPackage(@Nullable PsiClass psiClass) {
+        if (psiClass == null) {
+            return "";
+        }
         String topPackage = null;
         if (psiClass.getContainingClass() != null) {
             topPackage = psiClass.getContainingClass().getQualifiedName();
         }
         String classPackage = psiClass.getQualifiedName();
+        if (classPackage == null) {
+            return "";
+        }
         if (Utils.isEmpty(topPackage)) {
             return classPackage.replaceAll("\\.", "/") + ".html";
         }

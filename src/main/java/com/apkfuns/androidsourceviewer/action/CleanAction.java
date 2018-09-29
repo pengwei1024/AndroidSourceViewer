@@ -1,6 +1,6 @@
 package com.apkfuns.androidsourceviewer.action;
 
-import com.apkfuns.androidsourceviewer.entity.Constant;
+import com.apkfuns.androidsourceviewer.app.Constant;
 import com.apkfuns.androidsourceviewer.util.NotificationUtils;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -44,7 +44,7 @@ public class CleanAction extends AnAction {
     /**
      * clean cache directory
      */
-    public void clean() {
+    private void clean() {
         if (cacheFile != null) {
             try {
                 FileUtils.cleanDirectory(cacheFile);

@@ -62,6 +62,7 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.4.0'
     compile 'com.alibaba:fastjson:1.2.46'
     compile 'commons-io:commons-io:2.6'
+    compile 'org.jsoup:jsoup:1.11.3'
 }
 
 apply plugin: "org.jetbrains.intellij"

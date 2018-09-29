@@ -1,6 +1,6 @@
 package com.apkfuns.androidsourceviewer.widget;
 
-import com.apkfuns.androidsourceviewer.entity.Constant;
+import com.apkfuns.androidsourceviewer.app.Constant;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

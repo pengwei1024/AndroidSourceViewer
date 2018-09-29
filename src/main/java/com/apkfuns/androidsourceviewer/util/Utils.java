@@ -1,6 +1,6 @@
 package com.apkfuns.androidsourceviewer.util;
 
-import com.apkfuns.androidsourceviewer.entity.Constant;
+import com.apkfuns.androidsourceviewer.app.Constant;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
@@ -69,7 +69,7 @@ public class Utils {
     /**
      * 打开浏览器
      *
-     * @param url
+     * @param url url
      */
     public static void openUrl(String url) {
         if (SystemInfo.isWindows) {
@@ -187,8 +187,9 @@ public class Utils {
 
     /**
      * 是否为 Android 类
+     *
      * @param packageName
-     * @return
+     * @return bool
      */
     public static boolean isAndroidClass(String packageName) {
         for (String prefix : Constant.ANDROID_PACKAGE_PREFIX) {
@@ -201,6 +202,7 @@ public class Utils {
 
     /**
      * 检测服务是否正常
+     *
      * @param url 请求链接
      * @return
      */
