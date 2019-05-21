@@ -1,7 +1,12 @@
 # Compiled class file
 *.class
-.idea/
-*.iml
+.idea/gradle_extensions.xml
+.idea/libraries/Gradle__*.xml
+.idea/shelf
+.idea/usage.statistics.xml
+.idea/workspace.xml
+build/dependencies/.gradle
+build/dependencies/build
 
 # Log file
 *.log
@@ -20,6 +25,7 @@ out/
 *.zip
 *.tar.gz
 *.rar
+.DS_Store
 .gradle/
 out/
 
