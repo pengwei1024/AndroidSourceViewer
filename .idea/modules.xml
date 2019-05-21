@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidSourceViewer.iml" filepath="$PROJECT_DIR$/AndroidSourceViewer.iml" group="AndroidSourceViewer" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidSourceViewer.iml" filepath="$PROJECT_DIR$/AndroidSourceViewer.iml" />
     </modules>
   </component>
 </project>

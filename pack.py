@@ -7,7 +7,7 @@ version = ""
 for m in pattern.finditer(text):
 	version = m.group(1)
 print(version)
-path = "./jar"
+path = "./downloads"
 if not os.path.exists(path):
     os.makedirs(path)
 os.rename('./AndroidSourceViewer.zip', "%s/AndroidSourceViewer-%s.zip"%(path, version))
