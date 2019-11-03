@@ -22,7 +22,6 @@ out/
 # Package Files #
 *.war
 *.ear
-*.zip
 *.tar.gz
 *.rar
 .DS_Store
