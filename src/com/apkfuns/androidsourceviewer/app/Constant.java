@@ -9,11 +9,15 @@ public interface Constant {
 
     // 用户目录
     String USER_HOME = System.getProperty("user.home");
+    // 基础目录
+    String PROJECT_BASE_PATH = USER_HOME + "/.AndroidSourceViewer/";
     // 缓存目录
-    String CACHE_PATH = USER_HOME + "/.AndroidSourceViewerCache/";
+    String CACHE_PATH = PROJECT_BASE_PATH + "cache/";
+    // 全局配置文件
+    String GLOBAL_CONFIG_FILE = PROJECT_BASE_PATH + "global.properties";
 
     // 版本分布
-    String[] ANDROID_VERSION_LIST = {"Pie", "Pie - 9.0.0_r3",
+    String[] ANDROID_VERSION_LIST = {"Q", "Q - 10.0.0_r6", "Pie", "Pie - 9.0.0_r3",
             "Oreo", "Oreo - 8.1.0_r33", "Nougat", "Nougat - 7.1.1_r6", "Nougat - 7.0.0_r1",
             "Marshmallow", "Marshmallow - 6.0.1_r10", "Marshmallow - 6.0.0_r5", "Marshmallow - 6.0.0_r1",
             "Lollipop", "Lollipop - 5.1.1_r6", "Lollipop - 5.1.0_r1", "Lollipop - 5.0.0_r2", "KitKat", "KitKat - 4.4.4_r1",
@@ -38,10 +42,4 @@ public interface Constant {
 
     // Java 下载
     String JAVA_DOWNLOAD_BASE_PATH = "http://grepcode.com/file_/repository.grepcode.com/java/root/jdk/openjdk/%s/%s/?v=source&disposition=attachment";
-
-    // Android 搜索
-    String ANDROID_SEARCH = "http://androidxref.com/%s/search?q=&defs=&refs=&path=%s&hist=&project=art&project=bionic&project=bootable&project=build&project=cts&project=dalvik&project=developers&project=development&project=device&project=docs&project=external&project=frameworks&project=hardware&project=kernel&project=libcore&project=libnativehelper&project=packages&project=pdk&project=platform_testing&project=prebuilts&project=sdk&project=system&project=test&project=toolchain&project=tools";
-
-    // google 源码
-    String DOWNLOAD_GOOGLE_SOURCE = "http://source.apkfuns.com/?version=android-%s&class=%s";
 }

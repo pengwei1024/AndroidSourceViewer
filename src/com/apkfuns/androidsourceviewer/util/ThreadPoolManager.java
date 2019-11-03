@@ -36,6 +36,4 @@ public class ThreadPoolManager {
     public void addTask(Runnable runnable) {
         ioActionPoolService.execute(runnable);
     }
-
-
 }

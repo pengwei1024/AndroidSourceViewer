@@ -3,6 +3,7 @@ package com.apkfuns.androidsourceviewer.widget;
 import java.awt.*;
 
 /**
+ * 水平布局的 LayoutManager
  * Created by pengwei on 17/2/20.
  */
 public class LineLayout implements LayoutManager {

@@ -9,7 +9,7 @@ import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -20,6 +20,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
+import java.util.Map;
 
 /**
  * Created by pengwei on 2017/11/5.
@@ -27,7 +28,7 @@ import java.net.*;
 public class Utils {
 
     public static boolean isEmpty(String text) {
-        return text == null || text.trim().length() == 0;
+        return StringUtil.isEmpty(text);
     }
 
     @Nullable
@@ -64,34 +65,6 @@ public class Utils {
             Log.debug("cls = " + element.getClass());
         }
         return packageName;
-    }
-
-    /**
-     * 打开浏览器
-     *
-     * @param url url
-     */
-    public static void openUrl(String url) {
-        if (SystemInfo.isWindows) {
-            try {
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                URI uri = new URI(url);
-                Desktop desktop = null;
-                if (Desktop.isDesktopSupported()) {
-                    desktop = Desktop.getDesktop();
-                }
-                if (desktop != null) {
-                    desktop.browse(uri);
-                }
-            } catch (URISyntaxException | IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -188,7 +161,7 @@ public class Utils {
     /**
      * 是否为 Android 类
      *
-     * @param packageName
+     * @param packageName 包名
      * @return bool
      */
     public static boolean isAndroidClass(String packageName) {
@@ -204,7 +177,7 @@ public class Utils {
      * 检测服务是否正常
      *
      * @param url 请求链接
-     * @return
+     * @return bool
      */
     public static boolean isConnected(String url) {
         try {
@@ -218,5 +191,30 @@ public class Utils {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 匹配最合适的版本
+     *
+     * @param version 8.1.0_r3
+     * @return 8.0.0_r4
+     */
+    public static String matchVersion(Map<String, String> matchMap, String version) {
+        // 优先全匹配
+        for (String key: matchMap.keySet()) {
+            if (version.startsWith(key)) {
+                return matchMap.get(key);
+            }
+        }
+        // 配置不到的情况下选择大版本, 如8.1配置8.0.0
+        String[] versionGroup = version.split("\\.");
+        if (versionGroup.length > 0) {
+            for (String key: matchMap.keySet()) {
+                if (key.startsWith(versionGroup[0])) {
+                    return matchMap.get(key);
+                }
+            }
+        }
+        return version;
     }
 }

@@ -20,7 +20,6 @@ public class HttpUtil {
         conn.setConnectTimeout(5 * 1000);
         conn.setRequestMethod("GET");
         InputStream inStream = conn.getInputStream();
-        String result = new String(StreamUtil.loadFromStream(inStream));
-        return result;
+        return new String(StreamUtil.loadFromStream(inStream));
     }
 }

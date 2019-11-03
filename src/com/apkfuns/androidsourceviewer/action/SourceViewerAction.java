@@ -1,10 +1,10 @@
 package com.apkfuns.androidsourceviewer.action;
 
 import com.apkfuns.androidsourceviewer.action.base.BaseSourceAction;
-import com.apkfuns.androidsourceviewer.download.DownloadManager;
-import com.apkfuns.androidsourceviewer.entity.ClassEntity;
+import com.apkfuns.androidsourceviewer.util.DownloadManager;
+import com.apkfuns.androidsourceviewer.entity.DownloadTask;
 import com.apkfuns.androidsourceviewer.app.Constant;
-import com.apkfuns.androidsourceviewer.entity.DownloadResult;
+import com.apkfuns.androidsourceviewer.util.DownloadResult;
 import com.apkfuns.androidsourceviewer.util.Log;
 import com.apkfuns.androidsourceviewer.util.NotificationUtils;
 import com.apkfuns.androidsourceviewer.util.Utils;
@@ -35,26 +35,25 @@ public class SourceViewerAction extends BaseSourceAction implements PopListView.
         ProgressManager.getInstance().run(new Task.Backgroundable(project, title) {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
-                final ClassEntity entity = new ClassEntity(packageName, version);
-                DownloadManager.getInstance().downloadFile(new ClassEntity[]{entity},
-                        new File(Constant.CACHE_PATH + entity.getParentPath()),
+                final DownloadTask task = new DownloadTask(packageName, version);
+                DownloadManager.getInstance().downloadFile(new DownloadTask[]{task},
+                        new File(Constant.CACHE_PATH + task.getParentPath()),
                         new DownloadResult<File>() {
                             @Override
-                            public void onSuccess(List<File> output) {
-                                Log.debug("success: length=" + output.size());
+                            public void onSuccess(@NotNull List<File> output) {
+                                Log.debug("DownloadResult=" + output);
                                 if (output.isEmpty()) {
-                                    NotificationUtils.errorNotification("Error: Download " + entity.getPackageName()
-                                    + " Failure");
+                                    NotificationUtils.errorNotification("Error: Download " + task);
                                     return;
                                 }
                                 Utils.openFileInPanel(output.get(0).getPath(), SourceViewerAction.this.project);
                             }
 
                             @Override
-                            public void onFailure(String msg, Throwable throwable) {
+                            public void onFailure(@NotNull String msg, Throwable throwable) {
                                 NotificationUtils.errorNotification("Error:" + msg);
                             }
-                        });
+                        }, true);
                 progressIndicator.setFraction(0.5);
             }
         });

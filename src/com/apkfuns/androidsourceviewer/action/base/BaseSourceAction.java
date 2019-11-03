@@ -2,13 +2,12 @@ package com.apkfuns.androidsourceviewer.action.base;
 
 import com.apkfuns.androidsourceviewer.util.NotificationUtils;
 import com.apkfuns.androidsourceviewer.util.Utils;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.PsiElement;
 
-public abstract class BaseSourceAction extends BaseAction {
+public abstract class BaseSourceAction extends BaseAction implements DumbAware {
 
     protected String packageName;
     protected AnActionEvent actionEvent;

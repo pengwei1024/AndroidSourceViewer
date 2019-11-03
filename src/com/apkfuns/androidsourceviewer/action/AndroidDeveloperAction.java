@@ -1,10 +1,11 @@
 package com.apkfuns.androidsourceviewer.action;
 
 import com.apkfuns.androidsourceviewer.action.base.BaseSourceAction;
+import com.apkfuns.androidsourceviewer.util.Log;
 import com.apkfuns.androidsourceviewer.util.NotificationUtils;
 import com.apkfuns.androidsourceviewer.util.Utils;
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * https://developer.android.google.cn/reference/android/app/Activity.html#onRestoreInstanceState(android.os.Bundle)
  */
 public class AndroidDeveloperAction extends BaseSourceAction {
-    private static final Logger LOG = Logger.getInstance(AndroidDeveloperAction.class);
+    // 文档链接
     private static final String BASE_URL = "https://developer.android.google.cn/reference/";
 
     @Override
@@ -45,8 +46,8 @@ public class AndroidDeveloperAction extends BaseSourceAction {
             PsiClass psiClass = (PsiClass) element;
             linkUrl += getRealPackage(psiClass);
         }
-        LOG.info("linkUrl= " + linkUrl);
-        Utils.openUrl(linkUrl);
+        Log.debug("linkUrl= " + linkUrl);
+        BrowserUtil.open(linkUrl);
     }
 
     @Override

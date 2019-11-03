@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by pengwei on 2017/11/7.
@@ -35,7 +36,7 @@ public class PopListView {
             for (int i = 0; i < data.length; i++) {
                 if (!Utils.isEmpty(data[i])) {
                     if (data[i].contains("-")) {
-                        group.add(new ListItemAction(i, data[i], listener));
+                        group.add(new VersionListItemAction(i, data[i], listener));
                     } else {
                         group.addSeparator(data[i]);
                     }
@@ -69,13 +70,16 @@ public class PopListView {
         void OnItemClick(int position, String value);
     }
 
-    private static class ListItemAction extends AnAction {
+    /**
+     * Android版本选择
+     */
+    private static class VersionListItemAction extends AnAction {
 
         private int index;
         private String value;
         private OnItemClickListener clickListener;
 
-        public ListItemAction(int index, String value, OnItemClickListener clickListener) {
+        public VersionListItemAction(int index, String value, OnItemClickListener clickListener) {
             super(value);
             this.index = index;
             this.value = value;
@@ -83,9 +87,10 @@ public class PopListView {
         }
 
         @Override
-        public void actionPerformed(AnActionEvent anActionEvent) {
+        public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
             if (clickListener != null) {
-                clickListener.OnItemClick(this.index, this.value);
+                String versionName = this.value.substring(this.value.indexOf("-") + 1).trim();
+                clickListener.OnItemClick(this.index, versionName);
             }
         }
     }

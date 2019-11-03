@@ -1,10 +1,10 @@
 package com.apkfuns.androidsourceviewer.action;
 
 import com.apkfuns.androidsourceviewer.action.base.BaseSourceAction;
-import com.apkfuns.androidsourceviewer.download.DownloadManager;
+import com.apkfuns.androidsourceviewer.util.DownloadManager;
 import com.apkfuns.androidsourceviewer.app.Constant;
-import com.apkfuns.androidsourceviewer.entity.ClassEntity;
-import com.apkfuns.androidsourceviewer.entity.DownloadResult;
+import com.apkfuns.androidsourceviewer.entity.DownloadTask;
+import com.apkfuns.androidsourceviewer.util.DownloadResult;
 import com.apkfuns.androidsourceviewer.util.Log;
 import com.apkfuns.androidsourceviewer.util.NotificationUtils;
 import com.apkfuns.androidsourceviewer.widget.PopListView;
@@ -32,7 +32,9 @@ import java.util.List;
  */
 public class DiffSourceAction extends BaseSourceAction implements PopListView.OnItemClickListener {
 
+    // PopListView
     private PopListView popListView;
+    // 选中的第一个版本
     private String firstValue;
 
     @Override
@@ -61,27 +63,26 @@ public class DiffSourceAction extends BaseSourceAction implements PopListView.On
             ProgressManager.getInstance().run(new Task.Backgroundable(project, title) {
                 @Override
                 public void run(@NotNull ProgressIndicator progressIndicator) {
-                    final ClassEntity entity1 = new ClassEntity(packageName, firstValue);
-                    ClassEntity entity2 = new ClassEntity(packageName, value);
-                    DownloadManager.getInstance().downloadFile(new ClassEntity[]{entity1, entity2},
-                            new File(Constant.CACHE_PATH + entity1.getParentPath()),
+                    final DownloadTask task1 = new DownloadTask(packageName, firstValue);
+                    DownloadTask task2 = new DownloadTask(packageName, value);
+                    DownloadManager.getInstance().downloadFile(new DownloadTask[]{task1, task2},
+                            new File(Constant.CACHE_PATH + task1.getParentPath()),
                             new DownloadResult<File>() {
                                 @Override
-                                public void onSuccess(List<File> output) {
-                                    Log.debug("success: length=" + output.size());
-                                    if (output == null || output.size() < 2) {
-                                        NotificationUtils.errorNotification("Error: Download " + entity1.getPackageName()
-                                                + " Failure");
+                                public void onSuccess(@NotNull List<File> output) {
+                                    Log.debug("DownloadResult=" + output);
+                                    if (output.size() < 2) {
+                                        NotificationUtils.errorNotification("Error: Download " + task1);
                                         return;
                                     }
                                     diff(project, output.get(0), output.get(1));
                                 }
 
                                 @Override
-                                public void onFailure(String msg, Throwable throwable) {
+                                public void onFailure(@NotNull String msg, Throwable throwable) {
                                     NotificationUtils.errorNotification("Error:" + msg);
                                 }
-                            });
+                            }, true);
                 }
             });
         }
@@ -89,11 +90,12 @@ public class DiffSourceAction extends BaseSourceAction implements PopListView.On
 
     /**
      * 调用 Android 文件对比
-     * @param project
-     * @param f1
-     * @param f2
+     *
+     * @param project project
+     * @param f1      对比的第一个文件
+     * @param f2      对比的第二个文件
      */
-    public static void diff(final Project project, final File f1, final File f2) {
+    private void diff(final Project project, final File f1, final File f2) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {

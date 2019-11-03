@@ -3,7 +3,6 @@ package com.apkfuns.androidsourceviewer.provider;
 import com.apkfuns.androidsourceviewer.action.FindNativeMethodAction;
 import com.apkfuns.androidsourceviewer.icons.PluginIcons;
 import com.apkfuns.androidsourceviewer.util.Utils;
-import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
@@ -27,6 +26,7 @@ public class NativeMethodProvider implements LineMarkerProvider, GutterIconNavig
     @Nullable
     @Override
     public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement psiElement) {
+        System.out.println(psiElement);
         if (!(psiElement instanceof PsiMethod)) {
             return null;
         }
@@ -36,8 +36,8 @@ public class NativeMethodProvider implements LineMarkerProvider, GutterIconNavig
             if (modifier == JvmModifier.NATIVE && method.getContainingClass() != null) {
                 String packageName = method.getContainingClass().getQualifiedName();
                 if (packageName != null && Utils.getVersionList(packageName) != null) {
-                    return new LineMarkerInfo<PsiElement>(psiElement, psiElement.getTextRange(), PluginIcons.NATIVE,
-                            Pass.UPDATE_ALL, null, this,
+                    return new LineMarkerInfo<>(psiElement, psiElement.getTextRange(), PluginIcons.NATIVE,
+                            null, this,
                             GutterIconRenderer.Alignment.LEFT);
                 }
             }

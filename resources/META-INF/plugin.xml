@@ -1,15 +1,15 @@
 <idea-plugin>
-  <id>com.apkfuns.androidsourceviewer</id>
-  <name>AndroidSourceViewer</name>
-  <version>1.0.2</version>
-  <vendor email="pengwei1024@gmail.com" url="https://github.com/pengwei1024/AndroidSourceViewer">舞影凌风</vendor>
+    <id>com.apkfuns.androidsourceviewer</id>
+    <name>AndroidSourceViewer</name>
+    <version>1.2.0</version>
+    <vendor email="pengwei1024@gmail.com" url="https://github.com/pengwei1024/AndroidSourceViewer">舞影凌风</vendor>
 
-  <description><![CDATA[
+    <description><![CDATA[
         Android Source Viewer Plugin for Android Studio <br/>
         <img src='http://qiniu.apkfuns.com/ic-AndroidSourceViewer-plugin.png' width='310' height='254'/> <br/>
     ]]></description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
      <ul>
         <li>
             <b>1.0.3</b><br>
@@ -27,63 +27,62 @@
         </li>
       </ul>
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="173.0"/>
+    <idea-version since-build="173.0"/>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-    <codeInsight.lineMarkerProvider
-            language="JAVA"
-            implementationClass="com.apkfuns.androidsourceviewer.provider.NativeMethodProvider"/>
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <codeInsight.lineMarkerProvider
+                language="JAVA"
+                implementationClass="com.apkfuns.androidsourceviewer.provider.NativeMethodProvider"/>
+    </extensions>
 
-  <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.modules.java</depends>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
 
-  <actions>
-    <group>
-      <separator/>
-      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-    </group>
-    <action id="SourceViewerAction" class="com.apkfuns.androidsourceviewer.action.SourceViewerAction"
-            text="View Android Source" icon="/icons/java.png"
-            description="View Android Source Code">
-      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-      <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 1"/>
-    </action>
-    <action id="DiffSourceAction" class="com.apkfuns.androidsourceviewer.action.DiffSourceAction"
-            text="Diff Android Source" icon="/icons/diff.png"
-            description="Diff Android Source Code">
-      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-      <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 2"/>
-    </action>
-    <action id="AndroidDeveloperAction" class="com.apkfuns.androidsourceviewer.action.AndroidDeveloperAction"
-            text="Android Developer Reference" icon="/icons/android.png"
-            description="Android Developer Viewer">
-      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-      <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 3"/>
-    </action>
-    <action id="GlobalSearchAction" class="com.apkfuns.androidsourceviewer.action.GlobalSearchAction"
-            text="Android Source Search" icon="/icons/findPlain.png"
-            description="Android Source Search">
-      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-      <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 4"/>
-    </action>
-    <group>
-      <separator/>
-      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-    </group>
-    <group text="Android Source Viewer" popup="true" id="CleanActionGroup">
-      <action id="CleanAction" class="com.apkfuns.androidsourceviewer.action.CleanAction" text="Clean Cache"
-              description="Clean Cache File" icon="/icons/java.png">
-      </action>
-      <add-to-group group-id="ToolsMenu" anchor="last"/>
-    </group>
-  </actions>
+    <actions>
+        <group>
+            <separator/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </group>
+        <action id="SourceViewerAction" class="com.apkfuns.androidsourceviewer.action.SourceViewerAction"
+                text="View Android Source" icon="/icons/java.png"
+                description="View Android Source Code">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 1"/>
+        </action>
+        <action id="DiffSourceAction" class="com.apkfuns.androidsourceviewer.action.DiffSourceAction"
+                text="Diff Android Source" icon="/icons/diff.png"
+                description="Diff Android Source Code">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 2"/>
+        </action>
+        <action id="AndroidDeveloperAction" class="com.apkfuns.androidsourceviewer.action.AndroidDeveloperAction"
+                text="Android Developer Reference" icon="/icons/android.png"
+                description="Android Developer Viewer">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 3"/>
+        </action>
+        <action id="GlobalSearchAction" class="com.apkfuns.androidsourceviewer.action.CodeSearchAction"
+                text="Android Source Search" icon="/icons/findPlain.png"
+                description="Android Source Search">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 4"/>
+        </action>
+        <group>
+            <separator/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </group>
+        <group>
+            <separator/>
+            <add-to-group group-id="HelpMenu" anchor="last"/>
+        </group>
+        <action id="ASVHelpAction" class="com.apkfuns.androidsourceviewer.action.HelpAction" text="Android Source Viewer Setting"
+                description="Android Source Viewer Setting">
+            <add-to-group group-id="HelpMenu" anchor="last"/>
+        </action>
+    </actions>
 
 </idea-plugin>
