@@ -21,13 +21,15 @@ Android Studio 在线查看 Android 和 Java 指定版本源码插件
 ## Improve
 * 不支持查找变量对象是内部类
 * 本地源码不支持方法的定位
-* 
 * 还有很多其他尚未发现的缺陷和不足，欢迎提交 issue 和 PR
 
 ## Recommend
 ```
 Google 搜索 site:android.googlesource.com <关键词>
 ```
+
+## QQ群
+![](./screenshot/AndroidSourceViewer讨论群群二维码.png)
 
 ## Thanks
 * Android 源码来自 [http://androidxref.com](http://androidxref.com)、[https://www.androidos.net.cn/](https://www.androidos.net.cn/)
