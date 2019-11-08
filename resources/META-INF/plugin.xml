@@ -29,7 +29,7 @@
     ]]>
     </change-notes>
 
-    <idea-version since-build="173.0"/>
+    <idea-version since-build="181.0"/>
 
     <extensions defaultExtensionNs="com.intellij">
         <codeInsight.lineMarkerProvider

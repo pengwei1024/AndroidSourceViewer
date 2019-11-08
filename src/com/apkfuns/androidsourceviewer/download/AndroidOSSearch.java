@@ -3,6 +3,7 @@ package com.apkfuns.androidsourceviewer.download;
 import com.apkfuns.androidsourceviewer.download.inteface.FileDownload;
 import com.apkfuns.androidsourceviewer.entity.ClassFile;
 import com.apkfuns.androidsourceviewer.entity.DownloadTask;
+import com.apkfuns.androidsourceviewer.util.HttpUtil;
 import com.apkfuns.androidsourceviewer.util.Log;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 import com.intellij.openapi.util.Pair;
@@ -33,7 +34,15 @@ public class AndroidOSSearch extends FileDownload {
         for (DownloadTask task : tasks) {
             String url = String.format(REQUEST_PATH, task.getClassDescriptor().getFileName());
             try {
-                String content = HttpRequests.request(url).readString();
+                String content = null;
+                try {
+                    content = HttpUtil.syncGet(url);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (content == null) {
+                    continue;
+                }
                 Pattern pattern = Pattern.compile("<a target=\"_blank\" class=\"cleanurl\" href=\"(.*?)\"><b>.*</b></a>");
                 Matcher matcher = pattern.matcher(content);
                 String backup = null;
