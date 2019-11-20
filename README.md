@@ -1,6 +1,6 @@
 # AndroidSourceViewer
 
-![](https://img.shields.io/badge/AndroidSourceViewer-1.2.0-blue.svg)
+![](https://img.shields.io/badge/AndroidSourceViewer-1.2.1-blue.svg)
 
 Android Studio 在线查看 Android 和 Java 指定版本源码插件
 
